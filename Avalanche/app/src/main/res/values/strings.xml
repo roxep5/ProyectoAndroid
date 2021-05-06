@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Avalanche</string>
+    <string name="empezar">Start</string>
+    <string name="noche">Night</string>
+    <string name="dia">Day</string>
+    <string name="tema">Theme</string>
+    <string name="salir">Exit</string>
+</resources>

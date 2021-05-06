@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/optema" android:title="@string/tema">
+        <menu>
+            <item android:id="@+id/opnoche" android:title="@string/noche"/>
+            <item android:id="@+id/opdia" android:title="@string/dia"/>
+        </menu>
+    </item>
+    <item android:id="@+id/opsalir" android:title="@string/salir"/>
+</menu>
