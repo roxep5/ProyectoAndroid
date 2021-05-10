@@ -9,17 +9,22 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 
 public class MainActivity extends AppCompatActivity {
     private Button btnEmpezar;
+    private LinearLayout lnInscribirse;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        btnEmpezar=findViewById(R.id.btnEmpezar);
         NuevaBD bd= new NuevaBD(this,"fruteria",null, 1);
-        //btnEmpezar.setOnClickListener();
+
+        btnEmpezar=findViewById(R.id.btnEmpezar);
+        lnInscribirse=findViewById(R.id.linearIrAPantallas);
+
+        btnEmpezar.setOnLongClickListener(irALogin);
     }
 
 
@@ -52,4 +57,14 @@ public class MainActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);//false
         }
     }
+
+    private View.OnLongClickListener irALogin = new View.OnLongClickListener() {
+        @Override
+        public boolean onLongClick(View v) {
+            lnInscribirse.setVisibility(View.VISIBLE);
+            btnEmpezar.setVisibility(View.GONE);
+            return false;
+        }
+    };
+
 }

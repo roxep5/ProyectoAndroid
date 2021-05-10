@@ -9,7 +9,7 @@ import androidx.annotation.Nullable;
 public class NuevaBD extends SQLiteOpenHelper {
     String sqlCreateFrutas = "CREATE TABLE FRUTAS (codigo INTEGER PRIMARY KEY, nombre TEXT, precio REAL)";
     String sqlCreateVerduras = "CREATE TABLE VERDURAS (codigo INTEGER PRIMARY KEY, nombre TEXT, precio REAL)";
-    String sqlTienda = "CREATE TABLE TIENDA (codigo INTEGER PRIMARY KEY, nombre TEXT, telefono TEXT)";
+    String sqlTienda = "CREATE TABLE TIENDA (codigo INTEGER PRIMARY KEY, nombre TEXT, telefono TEXT, contrasenha TEXT)";
     String sqlTiendaFrutas = "CREATE TABLE TIENDAFRUTAS (codigoTienda INTEGER, codigoFruta INTEGER ,stock INTEGER," +
             "FOREIGN KEY('codigoTienda') REFERENCES 'tienda'('codigo')," +
             "FOREIGN KEY('codigoFruta') REFERENCES 'frutas'('codigo'))";
@@ -44,9 +44,9 @@ public class NuevaBD extends SQLiteOpenHelper {
         db.execSQL("INSERT INTO VERDURAS (codigo,nombre, precio) VALUES (4,'patatas', 4)");
         db.execSQL("INSERT INTO VERDURAS (codigo,nombre, precio) VALUES (5,'maiz', 8.00)");
 
-        db.execSQL("INSERT INTO TIENDA (codigo, nombre, telefono) VALUES (1, 'Frutas pepe', '986680209')");
-        db.execSQL("INSERT INTO TIENDA (codigo, nombre, telefono) VALUES (2, 'Manoli Frutas', '986698542')");
-        db.execSQL("INSERT INTO TIENDA (codigo, nombre, telefono) VALUES (3, 'Paco frutos', '986876215')");
+        db.execSQL("INSERT INTO TIENDA (codigo, nombre, telefono, contrasenha) VALUES (1, 'Frutas pepe', '986680209','abc123.')");
+        db.execSQL("INSERT INTO TIENDA (codigo, nombre, telefono, contrasenha) VALUES (2, 'Manoli Frutas', '986698542','abc123.')");
+        db.execSQL("INSERT INTO TIENDA (codigo, nombre, telefono, contrasenha) VALUES (3, 'Paco frutos', '986876215','abc123.')");
 
 
         db.execSQL("INSERT INTO TIENDAVERDURAS (codigoTienda, codigoFruta, stock) VALUES (1, 1, 10)");

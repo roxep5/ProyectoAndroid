@@ -11,6 +11,26 @@
         android:layout_width="300dp"
         android:layout_height="100dp"
         android:text="@string/empezar"
+        android:visibility="visible"
         />
-
+<LinearLayout
+    android:id="@+id/linearIrAPantallas"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:visibility="gone"
+    android:orientation="vertical"
+    android:gravity="center">
+    <Button
+        android:layout_margin="@dimen/marginbtn"
+        android:id="@+id/btnIniciarCliente"
+        android:layout_width="@dimen/btnLargo"
+        android:layout_height="@dimen/btnAncho"
+        android:text="@string/entrarCliente"/>
+    <Button
+        android:layout_margin="@dimen/marginbtn"
+        android:id="@+id/btnIniciarEmpresa"
+        android:layout_width="@dimen/btnLargo"
+        android:layout_height="@dimen/btnAncho"
+        android:text="@string/entrarEmpresa"/>
+</LinearLayout>
 </LinearLayout>

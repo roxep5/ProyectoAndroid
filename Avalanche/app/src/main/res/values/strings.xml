@@ -5,4 +5,6 @@
     <string name="dia">Day</string>
     <string name="tema">Theme</string>
     <string name="salir">Exit</string>
+    <string name="entrarCliente">Log in client</string>
+    <string name="entrarEmpresa">Log in bussines</string>
 </resources>

@@ -5,4 +5,5 @@
     <string name="dia">Día</string>
     <string name="tema">Tema</string>
     <string name="salir">Sair</string>
+    <string name="entrarCliente">Iniciar sesion cliente</string>
 </resources>
