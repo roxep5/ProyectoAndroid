@@ -10,6 +10,7 @@ public class NuevaBD extends SQLiteOpenHelper {
     String sqlCreateFrutas = "CREATE TABLE FRUTAS (codigo INTEGER PRIMARY KEY, nombre TEXT, precio REAL)";
     String sqlCreateVerduras = "CREATE TABLE VERDURAS (codigo INTEGER PRIMARY KEY, nombre TEXT, precio REAL)";
     String sqlTienda = "CREATE TABLE TIENDA (codigo INTEGER PRIMARY KEY, nombre TEXT, telefono TEXT, contrasenha TEXT)";
+    String sqlCliente = "CREATE TABLE Usuario (codigo INTEGER PRIMARY KEY, nombreUsuario TEXT, contrasenha TEXT)";//ampliar en un futuro datos de usuarioº
     String sqlTiendaFrutas = "CREATE TABLE TIENDAFRUTAS (codigoTienda INTEGER, codigoFruta INTEGER ,stock INTEGER," +
             "FOREIGN KEY('codigoTienda') REFERENCES 'tienda'('codigo')," +
             "FOREIGN KEY('codigoFruta') REFERENCES 'frutas'('codigo'))";
@@ -28,8 +29,10 @@ public class NuevaBD extends SQLiteOpenHelper {
         db.execSQL(sqlCreateFrutas);
         db.execSQL(sqlCreateVerduras);
         db.execSQL(sqlTienda);
+        db.execSQL(sqlCliente);
         db.execSQL(sqlTiendaFrutas);
         db.execSQL(sqlTiendaVerduras);
+
 
 
         db.execSQL("INSERT INTO FRUTAS (codigo,nombre, precio) VALUES (1,'naranjas', 1.15)");
@@ -49,20 +52,23 @@ public class NuevaBD extends SQLiteOpenHelper {
         db.execSQL("INSERT INTO TIENDA (codigo, nombre, telefono, contrasenha) VALUES (3, 'Paco frutos', '986876215','abc123.')");
 
 
-        db.execSQL("INSERT INTO TIENDAVERDURAS (codigoTienda, codigoFruta, stock) VALUES (1, 1, 10)");
-        db.execSQL("INSERT INTO TIENDAVERDURAS (codigoTienda, codigoFruta, stock) VALUES (1, 2, 20)");
-        db.execSQL("INSERT INTO TIENDAVERDURAS (codigoTienda, codigoFruta, stock) VALUES (1, 4, 18)");
-        db.execSQL("INSERT INTO TIENDAVERDURAS (codigoTienda, codigoFruta, stock) VALUES (1, 5, 13)");
+        db.execSQL("INSERT INTO Usuario (codigo, nombreUsuario, contrasenha) VALUES (1, 'admin', 'admin')");
+        db.execSQL("INSERT INTO Usuario (codigo, nombreUsuario, contrasenha) VALUES (2, 'yo', 'abc123.')");
 
-        db.execSQL("INSERT INTO TIENDAVERDURAS (codigoTienda, codigoFruta, stock) VALUES (2, 1, 40)");
-        db.execSQL("INSERT INTO TIENDAVERDURAS (codigoTienda, codigoFruta, stock) VALUES (2, 2, 30)");
-        db.execSQL("INSERT INTO TIENDAVERDURAS (codigoTienda, codigoFruta, stock) VALUES (2, 3, 43)");
-        db.execSQL("INSERT INTO TIENDAVERDURAS (codigoTienda, codigoFruta, stock) VALUES (2, 4, 25)");
-        db.execSQL("INSERT INTO TIENDAVERDURAS (codigoTienda, codigoFruta, stock) VALUES (2, 5, 50)");
+        db.execSQL("INSERT INTO TIENDAFRUTAS (codigoTienda, codigoFruta, stock) VALUES (1, 1, 10)");
+        db.execSQL("INSERT INTO TIENDAFRUTAS (codigoTienda, codigoFruta, stock) VALUES (1, 2, 20)");
+        db.execSQL("INSERT INTO TIENDAFRUTAS (codigoTienda, codigoFruta, stock) VALUES (1, 4, 18)");
+        db.execSQL("INSERT INTO TIENDAFRUTAS (codigoTienda, codigoFruta, stock) VALUES (1, 5, 13)");
 
-        db.execSQL("INSERT INTO TIENDAVERDURAS (codigoTienda, codigoFruta, stock) VALUES (3, 1, 24)");
-        db.execSQL("INSERT INTO TIENDAVERDURAS (codigoTienda, codigoFruta, stock) VALUES (3, 3, 26)");
-        db.execSQL("INSERT INTO TIENDAVERDURAS (codigoTienda, codigoFruta, stock) VALUES (2, 5, 50)");
+        db.execSQL("INSERT INTO TIENDAVERDURAS (codigoTienda, codigoVerdura, stock) VALUES (2, 1, 40)");
+        db.execSQL("INSERT INTO TIENDAVERDURAS (codigoTienda, codigoVerdura, stock) VALUES (2, 2, 30)");
+        db.execSQL("INSERT INTO TIENDAVERDURAS (codigoTienda, codigoVerdura, stock) VALUES (2, 3, 43)");
+        db.execSQL("INSERT INTO TIENDAVERDURAS (codigoTienda, codigoVerdura, stock) VALUES (2, 4, 25)");
+        db.execSQL("INSERT INTO TIENDAVERDURAS (codigoTienda, codigoVerdura, stock) VALUES (2, 5, 50)");
+
+        db.execSQL("INSERT INTO TIENDAVERDURAS (codigoTienda, codigoVerdura, stock) VALUES (3, 1, 24)");
+        db.execSQL("INSERT INTO TIENDAVERDURAS (codigoTienda, codigoVerdura, stock) VALUES (3, 3, 26)");
+        db.execSQL("INSERT INTO TIENDAVERDURAS (codigoTienda, codigoVerdura, stock) VALUES (2, 5, 50)");
 
 
 

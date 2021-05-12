@@ -5,7 +5,25 @@
     android:orientation="vertical"
     android:gravity="center"
     >
-
+<LinearLayout
+    android:id="@+id/llInicio"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="BIENVENIDO"
+        android:textSize="50dp"
+        android:layout_margin="30dp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="MANTENGA PULSADO PARA INICIAR LA APLICACION"
+        android:textSize="20dp"
+        android:layout_marginBottom="20dp"
+        android:textAlignment="center"/>
     <Button
         android:id="@+id/btnEmpezar"
         android:layout_width="300dp"
@@ -13,6 +31,7 @@
         android:text="@string/empezar"
         android:visibility="visible"
         />
+</LinearLayout>
 <LinearLayout
     android:id="@+id/linearIrAPantallas"
     android:layout_width="match_parent"
@@ -25,12 +44,15 @@
         android:id="@+id/btnIniciarCliente"
         android:layout_width="@dimen/btnLargo"
         android:layout_height="@dimen/btnAncho"
-        android:text="@string/entrarCliente"/>
+        android:text="@string/entrarCliente"
+        android:onClick="btnIniciarLogin"/>
     <Button
         android:layout_margin="@dimen/marginbtn"
         android:id="@+id/btnIniciarEmpresa"
         android:layout_width="@dimen/btnLargo"
         android:layout_height="@dimen/btnAncho"
-        android:text="@string/entrarEmpresa"/>
+        android:text="@string/entrarEmpresa"
+        android:onClick="btnIniciarLogin"
+        />
 </LinearLayout>
 </LinearLayout>
