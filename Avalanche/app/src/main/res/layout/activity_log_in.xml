@@ -5,7 +5,18 @@
     android:gravity="center"
     android:orientation="vertical"
     >
-
+    <ImageView
+        android:id="@+id/prueba"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+<TextView
+    android:id="@+id/txtCabeceraLogin"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="20dp"
+    android:textSize="35dp"
+    android:text="Iniciar sesion"
+    />
     <EditText
         android:id="@+id/editUsuario"
         android:layout_width="@dimen/btnLargo"

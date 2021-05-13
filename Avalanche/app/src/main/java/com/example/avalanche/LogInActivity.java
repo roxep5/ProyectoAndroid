@@ -6,9 +6,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,17 +20,22 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import java.io.ByteArrayInputStream;
 
 public class LogInActivity extends AppCompatActivity {
     private int bandera;
     private Button btnEntrar;
+    private TextView txtCabecera;
     private CheckBox chkverc;
     private EditText editUsuario, editContrasinal;
     public static final int CODIGO=1;
     private NuevaBD fruteriabd= new NuevaBD(this,"fruteria",null, 1);
     private SQLiteDatabase bd;
-
+    private ImageView prueba;
 
 
     @Override
@@ -36,10 +45,34 @@ public class LogInActivity extends AppCompatActivity {
 
         bd=fruteriabd.getReadableDatabase();
 
+        txtCabecera=findViewById(R.id.txtCabeceraLogin);
+        prueba=findViewById(R.id.prueba);
 
         Intent intent=getIntent();
         bandera=intent.getExtras().getInt("bandera");
+        /*if(bandera==1){
+            txtCabecera.setText("Cliente");
+        }else if(bandera==2){
+            txtCabecera.setText("Empresa");
+        }*/
 
+        Cursor c=bd.rawQuery("SELECT imagen FROM frutas WHERE codigo=1",null);
+        //Cursor c=bd.rawQuery("SELECT * FROM Usuario",null);
+        if (c.moveToFirst()) {
+            byte[] blob = c.getBlob(0);
+            ByteArrayInputStream bais = new ByteArrayInputStream(blob);
+            Bitmap bitmap = BitmapFactory.decodeStream(bais);
+            prueba.setImageBitmap(bitmap);
+        }else{
+
+            Toast.makeText(this, "Usuario inexistente", Toast.LENGTH_LONG).show();
+        }
+
+        SharedPreferences prefs =
+                PreferenceManager.getDefaultSharedPreferences(LogInActivity.this);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString("usuario","admin");
+        editor.putString("contrasenha","admin");
 
         btnEntrar=findViewById(R.id.btnEntrar);
         editUsuario=findViewById(R.id.editUsuario);
@@ -81,6 +114,7 @@ public class LogInActivity extends AppCompatActivity {
                 startActivityForResult(intent,CODIGO);
 
             }else{
+
                 Toast.makeText(this, "Usuario inexistente", Toast.LENGTH_LONG).show();
             }
         }else if(bandera==2){
