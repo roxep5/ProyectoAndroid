@@ -14,6 +14,7 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.InputType;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,39 +25,76 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import java.io.ByteArrayInputStream;
 
 public class LogInActivity extends AppCompatActivity {
     private int bandera;
-    private Button btnEntrar;
+    private Button btnEntrar,btnnuevo;
     private TextView txtCabecera;
     private CheckBox chkverc;
     private EditText editUsuario, editContrasinal;
     public static final int CODIGO=1;
-    private NuevaBD fruteriabd= new NuevaBD(this,"fruteria",null, 1);
+    //private NuevaBD fruteriabd= new NuevaBD(this,"fruteria",null, 1);
     private SQLiteDatabase bd;
     private ImageView prueba;
-
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log_in);
 
-        bd=fruteriabd.getReadableDatabase();
+        //bd=fruteriabd.getReadableDatabase();
 
         txtCabecera=findViewById(R.id.txtCabeceraLogin);
         prueba=findViewById(R.id.prueba);
 
         Intent intent=getIntent();
         bandera=intent.getExtras().getInt("bandera");
+
+
+        btnEntrar=findViewById(R.id.btnEntrar);
+        editUsuario=findViewById(R.id.editUsuario);
+        editContrasinal=findViewById(R.id.editContrasinal);
+        chkverc=findViewById(R.id.chkverc);
+        btnnuevo=findViewById(R.id.btnNuevo);
+
+        FirebaseAnalytics firebaseAnalytics=FirebaseAnalytics.getInstance(this);
+
+        mAuth = FirebaseAuth.getInstance();
+
+
+        if(bandera==1){
+            btnnuevo.setEnabled(true);
+        }
+
+        btnnuevo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(LogInActivity.this,NuevoUsuario.class);
+                startActivityForResult(intent,CODIGO);
+            }
+        });
+
+
+
+
+
+
         /*if(bandera==1){
             txtCabecera.setText("Cliente");
         }else if(bandera==2){
             txtCabecera.setText("Empresa");
         }*/
 
-        Cursor c=bd.rawQuery("SELECT imagen FROM frutas WHERE codigo=1",null);
+        /*Cursor c=bd.rawQuery("SELECT imagen FROM frutas WHERE codigo=1",null);
         //Cursor c=bd.rawQuery("SELECT * FROM Usuario",null);
         if (c.moveToFirst()) {
             byte[] blob = c.getBlob(0);
@@ -72,12 +110,8 @@ public class LogInActivity extends AppCompatActivity {
                 PreferenceManager.getDefaultSharedPreferences(LogInActivity.this);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString("usuario","admin");
-        editor.putString("contrasenha","admin");
+        editor.putString("contrasenha","admin");*/
 
-        btnEntrar=findViewById(R.id.btnEntrar);
-        editUsuario=findViewById(R.id.editUsuario);
-        editContrasinal=findViewById(R.id.editContrasinal);
-        chkverc=findViewById(R.id.chkverc);
 
 
 
@@ -102,8 +136,27 @@ public class LogInActivity extends AppCompatActivity {
 
 
     public void entrarGo(View v){
-
-        String usuario=editUsuario.getText().toString();
+        String email=editUsuario.getText().toString();
+        String password=editContrasinal.getText().toString();
+        if(!email.equals("")&&!password.equals("")){
+            mAuth.signInWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                // Sign in success, update UI with the signed-in user's information
+                                FirebaseUser user = mAuth.getCurrentUser();
+                                Intent intent=new Intent(LogInActivity.this,PantallaInicioCliente.class);
+                                startActivityForResult(intent,CODIGO);
+                            }else{
+                                Toast.makeText(LogInActivity.this, "Usuario inexistente2", Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    });
+        }else{
+            Toast.makeText(this, "Uno o ambos campos vacíos", Toast.LENGTH_LONG).show();
+        }
+        /*String usuario=editUsuario.getText().toString();
         String contrasinal=editContrasinal.getText().toString();
         if(bandera==1){
 
@@ -128,7 +181,7 @@ public class LogInActivity extends AppCompatActivity {
             }else{
                 Toast.makeText(this, "Usuario inexistente", Toast.LENGTH_LONG).show();
             }
-        }
+        }*/
     }
 
 
@@ -177,6 +230,13 @@ public class LogInActivity extends AppCompatActivity {
             if(resultCode==RESULT_OK){
                 datoRecibido=data.getExtras().getInt("finalizar");
                 if(datoRecibido==1){
+                    Bundle bundle=new Bundle();
+                    bundle.putInt("finalizar",1);
+
+                    Intent intent=new Intent();
+                    intent.putExtras(bundle);
+
+                    setResult(RESULT_OK, intent);
                     finish();
                 }
             }

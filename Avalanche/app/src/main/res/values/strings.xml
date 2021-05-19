@@ -7,8 +7,14 @@
     <string name="salir">Exit</string>
     <string name="entrarCliente">Log in client</string>
     <string name="entrarEmpresa">Log in bussines</string>
-    <string name="usuario">User</string>
+    <string name="usuario">Email</string>
     <string name="contrasinal">Password</string>
     <string name="entrar">Go</string>
     <string name="mostrarc">View password</string>
+    <string name="nuevoUsuario">New user</string>
+    <string name="nuevonombre">Name</string>
+    <string name="repetirContrasinal">Repeat password</string>
+    <string name="registrar">Register</string>
+
+
 </resources>

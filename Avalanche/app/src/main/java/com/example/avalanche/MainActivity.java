@@ -13,6 +13,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 public class MainActivity extends AppCompatActivity {
     public static final int CODIGO=1;
     private Button btnEmpezar, btnCliente, btnEmpresa;
@@ -29,6 +32,8 @@ public class MainActivity extends AppCompatActivity {
         btnEmpresa=findViewById(R.id.btnIniciarEmpresa);
         lnInscribirse=findViewById(R.id.linearIrAPantallas);
         llInicio=findViewById(R.id.llInicio);
+
+
 
         btnEmpezar.setOnLongClickListener(irALogin);
     }

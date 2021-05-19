@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "547008343045",
+    "project_id": "frutaspiga",
+    "storage_bucket": "frutaspiga.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:547008343045:android:9ce923db731459bfd3806c",
+        "android_client_info": {
+          "package_name": "com.example.avalanche"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "547008343045-4bbl3nepp4rus6ht5kbko0g3f740biqk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB46JEuD4r99XvTvkKwQ10k8Nf-iAJb56c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "547008343045-4bbl3nepp4rus6ht5kbko0g3f740biqk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -3,4 +3,7 @@
     <dimen name="btnLargo">200dp</dimen>
     <dimen name="btnAncho">70dp</dimen>
     <dimen name="marginbtn">10dp</dimen>
+    <dimen name="cabeceras">30dp</dimen>
+    <dimen name="marginbtnlogin">7dp</dimen>
+
 </resources>
