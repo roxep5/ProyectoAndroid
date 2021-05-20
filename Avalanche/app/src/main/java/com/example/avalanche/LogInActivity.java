@@ -39,17 +39,13 @@ public class LogInActivity extends AppCompatActivity {
     private CheckBox chkverc;
     private EditText editUsuario, editContrasinal;
     public static final int CODIGO=1;
-    //private NuevaBD fruteriabd= new NuevaBD(this,"fruteria",null, 1);
     private SQLiteDatabase bd;
     private ImageView prueba;
     private FirebaseAuth mAuth;
-    private boolean entrarUsu;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log_in);
-
-        //bd=fruteriabd.getReadableDatabase();
 
         txtCabecera=findViewById(R.id.txtCabeceraLogin);
         prueba=findViewById(R.id.prueba);
@@ -82,37 +78,6 @@ public class LogInActivity extends AppCompatActivity {
         });
 
 
-
-
-
-
-        /*if(bandera==1){
-            txtCabecera.setText("Cliente");
-        }else if(bandera==2){
-            txtCabecera.setText("Empresa");
-        }*/
-
-        /*Cursor c=bd.rawQuery("SELECT imagen FROM frutas WHERE codigo=1",null);
-        //Cursor c=bd.rawQuery("SELECT * FROM Usuario",null);
-        if (c.moveToFirst()) {
-            byte[] blob = c.getBlob(0);
-            ByteArrayInputStream bais = new ByteArrayInputStream(blob);
-            Bitmap bitmap = BitmapFactory.decodeStream(bais);
-            prueba.setImageBitmap(bitmap);
-        }else{
-
-            Toast.makeText(this, "Usuario inexistente", Toast.LENGTH_LONG).show();
-        }
-
-        SharedPreferences prefs =
-                PreferenceManager.getDefaultSharedPreferences(LogInActivity.this);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putString("usuario","admin");
-        editor.putString("contrasenha","admin");*/
-
-
-
-
         chkverc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -130,16 +95,11 @@ public class LogInActivity extends AppCompatActivity {
     }
 
 
-
-
-
     public void entrarGo(View v){
         String email=editUsuario.getText().toString();
         String password=editContrasinal.getText().toString();
-        entrarUsu=false;
-        if(!email.equals("")&&!password.equals("")){
 
-
+            if (!email.equals("") && !password.equals("")) {
 
                 mAuth.signInWithEmailAndPassword(email, password)
                         .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -154,51 +114,34 @@ public class LogInActivity extends AppCompatActivity {
                                     docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                                         @Override
                                         public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                            Usuario usuario=documentSnapshot.toObject(Usuario.class);
-                                            if(!usuario.isFruteria()){
+                                            Usuario usuario = documentSnapshot.toObject(Usuario.class);
+                                            if (!usuario.isFruteria()&&bandera==1) {
+
                                                 FirebaseUser user = mAuth.getCurrentUser();
-                                                Intent intent=new Intent(LogInActivity.this,PantallaInicioCliente.class);
-                                                startActivityForResult(intent,CODIGO);
+                                                Intent intent = new Intent(LogInActivity.this, PantallaInicioCliente.class);
+                                                startActivityForResult(intent, CODIGO);
+
+                                            }else if(usuario.isFruteria()&&bandera==2){
+
+                                                FirebaseUser user = mAuth.getCurrentUser();
+                                                Intent intent = new Intent(LogInActivity.this, PantallaInicioEmpresa.class);
+                                                startActivityForResult(intent, CODIGO);
+
                                             }
                                         }
                                     });
 
 
-                                }else{
-                                    Toast.makeText(LogInActivity.this, "Usuario inexistente2", Toast.LENGTH_LONG).show();
+                                } else {
+                                    Toast.makeText(LogInActivity.this, "Email o contraseña erróneos", Toast.LENGTH_LONG).show();
                                 }
                             }
                         });
 
-        }else{
-            Toast.makeText(this, "Uno o ambos campos vacíos", Toast.LENGTH_LONG).show();
-        }
-        /*String usuario=editUsuario.getText().toString();
-        String contrasinal=editContrasinal.getText().toString();
-        if(bandera==1){
-
-            Cursor c=bd.rawQuery("SELECT * FROM USUARIO WHERE nombreUsuario='"+usuario+"' and contrasenha='"+contrasinal+"'",null);
-            //Cursor c=bd.rawQuery("SELECT * FROM Usuario",null);
-            if (c.moveToFirst()) {
-                Intent intent=new Intent(LogInActivity.this,PantallaInicioCliente.class);
-                startActivityForResult(intent,CODIGO);
-
-            }else{
-
-                Toast.makeText(this, "Usuario inexistente", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(this, "Uno o ambos campos vacíos", Toast.LENGTH_LONG).show();
             }
-        }else if(bandera==2){
 
-            Cursor c=bd.rawQuery("SELECT * FROM TIENDA WHERE nombre='"+usuario+"' and contrasenha='"+contrasinal+"'",null);
-            //Cursor c=bd.rawQuery("SELECT * FROM Usuario",null);
-            if (c.moveToFirst()) {
-                Intent intent=new Intent(LogInActivity.this,PantallaInicioCliente.class);
-                startActivityForResult(intent,CODIGO);
-
-            }else{
-                Toast.makeText(this, "Usuario inexistente", Toast.LENGTH_LONG).show();
-            }
-        }*/
     }
 
 

@@ -1,7 +1,7 @@
 package com.example.avalanche;
 
 public class Usuario {
-    private String email, nombre, numero;
+    private String nombre, numero;
     private boolean fruteria;
     public Usuario(){
 
@@ -14,13 +14,7 @@ public class Usuario {
         this.numero = numero;
 
     }
-    public String getEmail() {
-        return email;
-    }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
 
     public String getNombre() {
         return nombre;

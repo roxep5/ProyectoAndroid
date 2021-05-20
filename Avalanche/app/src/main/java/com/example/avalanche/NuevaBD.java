@@ -35,9 +35,9 @@ public class NuevaBD extends SQLiteOpenHelper {
 
 
 
-        db.execSQL("INSERT INTO FRUTAS (codigo,nombre, precio, imagen) VALUES (1,'naranjas', 1.15,'naranjas.png')");
-        db.execSQL("INSERT INTO FRUTAS (codigo,nombre, precio, imagen) VALUES (2,'fresas', 2.00, 'fresa.png')");
-        db.execSQL("INSERT INTO FRUTAS (codigo,nombre, precio, imagen) VALUES (3,'platanos', 1.55, 'platano.')");
+        db.execSQL("INSERT INTO FRUTAS (codigo,nombre, precio) VALUES (1,'naranjas', 1.15)");
+        db.execSQL("INSERT INTO FRUTAS (codigo,nombre, precio) VALUES (2,'fresas', 2.00)");
+        db.execSQL("INSERT INTO FRUTAS (codigo,nombre, precio) VALUES (3,'platanos', 1.55)");
         db.execSQL("INSERT INTO FRUTAS (codigo,nombre, precio) VALUES (4,'melones', 4.00)");
         db.execSQL("INSERT INTO FRUTAS (codigo,nombre, precio) VALUES (5,'kiwis', 10.00)");
 

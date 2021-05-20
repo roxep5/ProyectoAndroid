@@ -111,12 +111,12 @@ public class NuevoUsuarioActivity extends AppCompatActivity {
                                     Toast.makeText(NuevoUsuarioActivity.this, "Usuario Creado.",
                                             Toast.LENGTH_SHORT).show();
                                     FirebaseFirestore db = FirebaseFirestore.getInstance();
-
+                                    Usuario usuario= new Usuario(false,nombre,numero);
                                     // Create a new user with a first and last name
-                                    Map<String, Object> usuario = new HashMap<>();
+                                    /*Map<String, Object> usuario = new HashMap<>();
                                     usuario.put("nombre", nombre);
                                     usuario.put("numero", numero);
-                                    usuario.put("fruteria", false);
+                                    usuario.put("fruteria", false);*/
 
                                     db.collection("Users").document(email).set(usuario);
 
