@@ -8,8 +8,9 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Avalanche">
-        <activity android:name=".NuevoUsuario"></activity>
+        android:theme="@style/Theme.Avalanche"
+        android:name="androidx.multidex.MultiDexApplication" >
+        <activity android:name=".NuevoUsuarioActivity"></activity>
         <activity android:name=".PantallaInicioEmpresa" />
         <activity android:name=".PantallaInicioCliente" />
         <activity android:name=".LogInActivity" />

@@ -15,4 +15,7 @@
     <string name="nuevonombre">Nombre</string>
     <string name="repetirContrasinal">Repetir contraseña</string>
     <string name="registrar">Registrar</string>
+
+    <string name="numerotelefon">Numero</string>
+
 </resources>

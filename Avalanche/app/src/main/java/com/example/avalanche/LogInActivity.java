@@ -6,15 +6,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.text.InputType;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,13 +20,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
-import java.io.ByteArrayInputStream;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldPath;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 public class LogInActivity extends AppCompatActivity {
     private int bandera;
@@ -45,7 +43,7 @@ public class LogInActivity extends AppCompatActivity {
     private SQLiteDatabase bd;
     private ImageView prueba;
     private FirebaseAuth mAuth;
-
+    private boolean entrarUsu;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,7 +76,7 @@ public class LogInActivity extends AppCompatActivity {
         btnnuevo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(LogInActivity.this,NuevoUsuario.class);
+                Intent intent=new Intent(LogInActivity.this, NuevoUsuarioActivity.class);
                 startActivityForResult(intent,CODIGO);
             }
         });
@@ -138,21 +136,40 @@ public class LogInActivity extends AppCompatActivity {
     public void entrarGo(View v){
         String email=editUsuario.getText().toString();
         String password=editContrasinal.getText().toString();
+        entrarUsu=false;
         if(!email.equals("")&&!password.equals("")){
-            mAuth.signInWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()) {
-                                // Sign in success, update UI with the signed-in user's information
-                                FirebaseUser user = mAuth.getCurrentUser();
-                                Intent intent=new Intent(LogInActivity.this,PantallaInicioCliente.class);
-                                startActivityForResult(intent,CODIGO);
-                            }else{
-                                Toast.makeText(LogInActivity.this, "Usuario inexistente2", Toast.LENGTH_LONG).show();
+
+
+
+                mAuth.signInWithEmailAndPassword(email, password)
+                        .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+
+                                if (task.isSuccessful()) {
+                                    // Sign in success, update UI with the signed-in user's information
+
+                                    FirebaseFirestore db = FirebaseFirestore.getInstance();
+                                    DocumentReference docRef = db.collection("Users").document(email);
+                                    docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                        @Override
+                                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                            Usuario usuario=documentSnapshot.toObject(Usuario.class);
+                                            if(!usuario.isFruteria()){
+                                                FirebaseUser user = mAuth.getCurrentUser();
+                                                Intent intent=new Intent(LogInActivity.this,PantallaInicioCliente.class);
+                                                startActivityForResult(intent,CODIGO);
+                                            }
+                                        }
+                                    });
+
+
+                                }else{
+                                    Toast.makeText(LogInActivity.this, "Usuario inexistente2", Toast.LENGTH_LONG).show();
+                                }
                             }
-                        }
-                    });
+                        });
+
         }else{
             Toast.makeText(this, "Uno o ambos campos vacíos", Toast.LENGTH_LONG).show();
         }
