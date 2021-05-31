@@ -136,10 +136,10 @@ public class PantallaInicioCliente extends AppCompatActivity {
             Fragment fragment =null;
             switch (position) {
                 case 0:
-                    fragment = new BlankFragment();
+                    fragment = new FragmentClienteComprar();
                     break;
                 case 1:
-                    fragment = new BlankFragment2();
+                    fragment = new FragmentClienteHistorico();
                     break;
             }
             return fragment;
