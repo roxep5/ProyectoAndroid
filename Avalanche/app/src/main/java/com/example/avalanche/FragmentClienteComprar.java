@@ -23,77 +23,95 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.List;
 
 import static android.content.ContentValues.TAG;
 
 
 public class FragmentClienteComprar extends Fragment {
-    private String[] fruterias;
-    //private ArrayList<Fruteria> fruterias;
-    private ListView lvFruterias;
-    ArrayAdapter<String> adaptador;
-    private int i;
+
+    private ListView lvFruterias, lvProductos;
+    private Fruteria fruteria;
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
     public FragmentClienteComprar() {
         // Required empty public constructor
     }
 
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        lvFruterias=getActivity().findViewById(R.id.lvFruterias);
-        LeerFruteria();
-        //adaptador= new ArrayAdapter<>(getActivity(), R.layout.linea, R.id.txtPrueba, fruterias);
-        //lvFruterias.setAdapter(adaptador);
 
-    }
 
-    private void LeerFruteria(){
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        /*DocumentReference docRef = db.collection("Fruteria");
-        docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
 
-            }
-        })*/
-        db.collection("Fruteria")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            int i=0;
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                i++;
-                            }
-                            fruterias=new String[i];
-                            i=0;
-                            for (QueryDocumentSnapshot document : task.getResult()) {
 
-                                fruterias[i]=document.getString("nombre");
-
-                                i++;
-                            }
-                        } else {
-                            Toast.makeText(getActivity(), "Algo va mal.",
-                                    Toast.LENGTH_SHORT).show();
-                            Log.d(TAG, "Error getting documents: ", task.getException());
-                        }
-                    }
-                });
-
-        for(int i=0;i<fruterias.length;i++){
-            Toast.makeText(getActivity(),fruterias[i]+" "+i ,
-                    Toast.LENGTH_SHORT).show();
-        }
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_cliente_comprar, container, false);
+        View vista;
+        vista= inflater.inflate(R.layout.fragment_cliente_comprar, container, false);
+        lvFruterias=vista.findViewById(R.id.lvFruterias);
+        lvProductos=vista.findViewById(R.id.lvProductos);
+        LeerFruteria();
+        lvFruterias.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String fruteriaSeleccionada= parent.getItemAtPosition(position).toString();
+                db.collection("Mercancia")
+                        .whereEqualTo("fruteria", "/Fruteria/"+fruteriaSeleccionada)
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()) {
+
+                                    List<String> list = new ArrayList<>();
+                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                        Toast.makeText(getActivity(), " "+document.getLong("peso"), Toast.LENGTH_LONG).show();
+                                    }
+                                    /*ArrayAdapter<String> adaptador;
+                                    adaptador= new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, Fruteria);
+                                    lvProductos.setAdapter(adaptador);*/
+                                } else {
+                                    Toast.makeText(getActivity(), " Error ", Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        }
+                        );
+                lvFruterias.setVisibility(View.GONE);
+                lvProductos.setVisibility(View.VISIBLE);
+            }
+        }
+         );
+        return vista;
+    }
+
+    private void LeerFruteria(){
+
+        List<String> list = new ArrayList<>();
+        db.collection("Fruteria").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    List<String> list = new ArrayList<>();
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        list.add(document.getString("nombre"));
+                        fruteria=document.toObject(Fruteria.class);
+                    }Toast.makeText(getActivity(), list.toString(), Toast.LENGTH_LONG).show();
+                    String[] Fruteria=new String[list.size()];
+                    for(int i=0;i<Fruteria.length;i++){
+                        Fruteria[i]= list.get(i);
+                    }
+
+                    ArrayAdapter<String> adaptador;
+                    adaptador= new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, Fruteria);
+                    lvFruterias.setAdapter(adaptador);
+                } else {
+                    Log.d(TAG, "Error getting documents: ", task.getException());
+                }
+            }
+        });
+
     }
 }

@@ -9,6 +9,13 @@ public class Fruteria {
     public Fruteria() {
     }
 
+    public Fruteria(String direccion, String email, String nombre, String usuario) {
+        this.direccion = direccion;
+        this.email = email;
+        this.nombre = nombre;
+        this.usuario = usuario;
+    }
+
     public String getDireccion() {
         return direccion;
     }
