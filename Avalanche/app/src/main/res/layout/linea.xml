@@ -5,6 +5,7 @@
 
     android:padding="@dimen/marginlinearlinea">
 <ImageView
+    android:id="@+id/imgprod"
     android:layout_width="@dimen/imageVista"
     android:layout_height="@dimen/imageVista"/>
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -12,10 +13,11 @@
         android:layout_height="wrap_content">
 
         <TextView
-            android:id="@+id/txtPrueba"
+            android:id="@+id/txtNombreProd"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
         <TextView
+            android:id="@+id/txtPrecio"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
     </LinearLayout>

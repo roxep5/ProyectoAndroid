@@ -15,11 +15,13 @@ import android.widget.LinearLayout;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.storage.FirebaseStorage;
 
 public class MainActivity extends AppCompatActivity {
     public static final int CODIGO=1;
     private Button btnEmpezar, btnCliente, btnEmpresa;
     private LinearLayout lnInscribirse, llInicio;
+    private FirebaseStorage storage = FirebaseStorage.getInstance("gs://my-custom-bucket");
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

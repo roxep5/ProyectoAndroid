@@ -10,6 +10,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Avalanche">
+        <activity android:name=".PruebaConsultas"></activity>
         <activity android:name=".NuevoUsuarioActivity" />
         <activity android:name=".PantallaInicioEmpresa" />
         <activity android:name=".PantallaInicioCliente" />

@@ -25,7 +25,10 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -41,7 +44,8 @@ public class FragmentClienteComprar extends Fragment {
     private ListView lvFruterias, lvProductos;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private String cif;
-    private String[] referenciaFrutas;
+    private List<FrutasVerduras> productoA;
+    private int i=0;
     public FragmentClienteComprar() {
         // Required empty public constructor
     }
@@ -66,7 +70,6 @@ public class FragmentClienteComprar extends Fragment {
         lvProductos=vista.findViewById(R.id.lvProductos);
 
         LeerFruteria();
-        Toast.makeText(getActivity(), "prueba", Toast.LENGTH_LONG).show();
 
 
         lvFruterias.setOnItemClickListener(prueba);
@@ -76,116 +79,96 @@ public class FragmentClienteComprar extends Fragment {
 
         return vista;
     }
+
     private AdapterView.OnItemClickListener prueba=new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     String fruteriaSeleccionada= parent.getItemAtPosition(position).toString();
-                    db.collection("Fruteria")
-                            .whereEqualTo("nombre", fruteriaSeleccionada)
-                            .get()
-                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                                       @Override
-                                                       public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                                           if (task.isSuccessful()) {
+                    final Query docRef=db.collection("Fruteria")
+                    .whereEqualTo("nombre", fruteriaSeleccionada);
 
-                                                               List<String> list = new ArrayList<>();
-                                                               for (QueryDocumentSnapshot document : task.getResult()) {
-
-                                                                   cif=document.getId();
-                                                               }
-                                                               ArrayAdapter<String> adaptador;
-                                                               /*adaptador= new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, Fruteria);
-                                                               lvProductos.setAdapter(adaptador)*/
-
-                                                           } else {
-                                                               Toast.makeText(getActivity(), " Error ", Toast.LENGTH_LONG).show();
-                                                           }
-                                                       }
-                                                   }
-                            );
-                    db.collection("Mercancia")
-                            .whereEqualTo("fruteria", "Fruteria/"+cif)
-                            .get()
-                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                                       @Override
-                                                       public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                                           if (task.isSuccessful()) {
-
-                                                               List<String> list = new ArrayList<>();
-                                                               for (QueryDocumentSnapshot document : task.getResult()) {
-
-                                                                   list.add(document.getString("FrutasVerduras"));
-                                                               }
-                                                                referenciaFrutas=new String[list.size()];
-                                                               for(int i=0;i<referenciaFrutas.length;i++){
-                                                                   referenciaFrutas[i]=list.get(i);
-                                                               }
-                                                           } else {
-                                                               Toast.makeText(getActivity(), " Error ", Toast.LENGTH_LONG).show();
-                                                           }
-                                                       }
-                                                   }
-                            );
-                    for(int i=0;i<referenciaFrutas.length;i++){
-                        db.document(referenciaFrutas[i]).get().addOnSuccessListener(
-                                new OnCompleteListener<DocumentSnapshot>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                        if (task.isSuccessful()) {
-                                            DocumentSnapshot document = task.getResult();
-                                            if (document.exists()) {
- 
-                                                Log.d(TAG, "DocumentSnapshot data: " + document.getData());
-                                            } else {
-                                                Log.d(TAG, "No such document");
-                                            }
-                                        } else {
-                                            Log.d(TAG, "get failed with ", task.getException());
-                                        }
+                    docRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
+                        @Override
+                        public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                                    if (error != null) {
+                                        Log.w(TAG, "Listen failed.", error);
+                                        return;
                                     }
+                            for (QueryDocumentSnapshot doc : value) {
+                                verProducto(doc.getId());
 
-                        };
-                    }
+
+                                }
+                            }
+
+                            });
+
+
 
                     lvFruterias.setVisibility(View.GONE);
                     lvProductos.setVisibility(View.VISIBLE);
                 }
 
         };
-    @Override
-    public boolean onContextItemSelected(@NonNull MenuItem item) {
-        switch(item.getItemId()){
-            case R.id.comprar:
 
-                return true;
-            //otros casos…
-            case R.id.llamar:
+    public void verProducto(String cif2){
+        Query docRef2=db.collection("Mercancia")
+                .whereEqualTo("fruteria", cif2);
 
-                return true;
-            default:
-                return super.onContextItemSelected(item);
-        }
+        docRef2.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+
+                if (error != null) {
+                    Log.w(TAG, "Listen failed.", error);
+                    return;
+                }
+                productoA=new ArrayList<>();
+                for (QueryDocumentSnapshot doc : value) {
+
+                    String producto=doc.getString("producto");
+                    crearListViewProductos(producto);
+
+
+                }
+            }
+
+        });
     }
 
-   /* @Override
-    public void onCreateContextMenu(ContextMenu menu, View v,
-                                    ContextMenu.ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
-        menu.add(1,1,0,"comprar");
-        menu.add(2,2,0,"comprar");
+
+
+    public void crearListViewProductos(String ProductoID){
+        String[] X=ProductoID.split("/");
+        Toast.makeText(getActivity(), X[0], Toast.LENGTH_LONG).show();
+        Toast.makeText(getActivity(), X[1], Toast.LENGTH_LONG).show();
+        final DocumentReference docRef= db.collection(X[0]).document(X[1]);
+        docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                if (error != null) {
+                    Log.w(TAG, "Listen failed.", error);
+                    return;
+                }
+
+
+                if (value != null && value.exists()) {
+                FrutasVerduras frutasVerduras=value.toObject(FrutasVerduras.class);
+                    productoA.add(frutasVerduras);
+                    i++;
+
+                } else {
+                    Log.d(TAG, "Current data: null");
+                }
+            }
+        });
+
+
 
     }
-*/
-   @Override
-   public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo
-           menuInfo) {
-       super.onCreateContextMenu(menu, v, menuInfo);
-       MenuInflater inflater=getActivity().getMenuInflater();
-       AdapterView.AdapterContextMenuInfo info=(AdapterView.AdapterContextMenuInfo)menuInfo;
-       String elemento=lvFruterias.getAdapter().getItem(info.position).toString();
-       menu.setHeaderTitle(elemento);
-       inflater.inflate(R.menu.menu_contextual, menu);
-   }
+
+
+
     private void LeerFruteria(){
 
         List<String> list = new ArrayList<>();
@@ -199,8 +182,7 @@ public class FragmentClienteComprar extends Fragment {
 
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         list.add(document.getString("nombre"));
-                    }Toast.makeText(getActivity(), list.toString(), Toast.LENGTH_LONG).show();
-
+                    }
                     String[] Fruteria=new String[list.size()];
 
                     for(int i=0;i<Fruteria.length;i++){
@@ -210,7 +192,6 @@ public class FragmentClienteComprar extends Fragment {
                     ArrayAdapter<String> adaptador;
                     adaptador= new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, Fruteria);
                     lvFruterias.setAdapter(adaptador);
-                    registerForContextMenu(lvFruterias);
                 } else {
                     Log.d(TAG, "Error getting documents: ", task.getException());
                 }
