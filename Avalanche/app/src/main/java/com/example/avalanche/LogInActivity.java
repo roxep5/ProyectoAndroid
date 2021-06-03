@@ -118,7 +118,7 @@ public class LogInActivity extends AppCompatActivity {
                                             if (!usuario.isFruteria()&&bandera==1) {
 
                                                 FirebaseUser user = mAuth.getCurrentUser();
-                                                Intent intent = new Intent(LogInActivity.this, PruebaConsultas.class);
+                                                Intent intent = new Intent(LogInActivity.this, PantallaInicioCliente.class);
                                                 startActivityForResult(intent, CODIGO);
 
                                             }else if(usuario.isFruteria()&&bandera==2){
