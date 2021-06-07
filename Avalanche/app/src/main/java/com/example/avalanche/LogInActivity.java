@@ -6,8 +6,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,34 +38,46 @@ public class LogInActivity extends AppCompatActivity {
     private int bandera;
     private Button btnEntrar,btnnuevo;
     private TextView txtCabecera;
-    private CheckBox chkverc;
+    private CheckBox chkverc, chkguardar;
     private EditText editUsuario, editContrasinal;
     public static final int CODIGO=1;
     private SQLiteDatabase bd;
     private ImageView prueba;
     private FirebaseAuth mAuth;
+    private SharedPreferences prefs;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log_in);
+        prefs=PreferenceManager.getDefaultSharedPreferences(LogInActivity.this);
 
         txtCabecera=findViewById(R.id.txtCabeceraLogin);
         prueba=findViewById(R.id.prueba);
-
-        Intent intent=getIntent();
-        bandera=intent.getExtras().getInt("bandera");
-
-
         btnEntrar=findViewById(R.id.btnEntrar);
         editUsuario=findViewById(R.id.editUsuario);
         editContrasinal=findViewById(R.id.editContrasinal);
         chkverc=findViewById(R.id.chkverc);
+        chkguardar=findViewById(R.id.chkguardar);
         btnnuevo=findViewById(R.id.btnNuevo);
+
+
+        int guardado=prefs.getInt("Guardado", 0);
+
+        if(guardado==1){
+            String email=prefs.getString("email", "");
+            String contrasenha=prefs.getString("contrasenha", "");
+            chkguardar.setChecked(true);
+            editUsuario.setText(email);
+            editContrasinal.setText(contrasenha);
+        }
 
         FirebaseAnalytics firebaseAnalytics=FirebaseAnalytics.getInstance(this);
 
         mAuth = FirebaseAuth.getInstance();
 
+        Intent intent=getIntent();
+        bandera=intent.getExtras().getInt("bandera");
 
         if(bandera==1){
             btnnuevo.setEnabled(true);
@@ -82,11 +96,9 @@ public class LogInActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(chkverc.isChecked()){
-
                     editContrasinal.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
                 }else if(!chkverc.isChecked()){
                     editContrasinal.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-                    ;
                 }
             }
         });
@@ -96,6 +108,20 @@ public class LogInActivity extends AppCompatActivity {
 
 
     public void entrarGo(View v){
+
+        SharedPreferences.Editor editor = prefs.edit();
+        if(chkguardar.isChecked()){
+            editor.putInt("Guardado", 1);
+            editor.putString("email", editUsuario.getText().toString());
+            editor.putString("contrasenha", editContrasinal.getText().toString());
+            editor.apply();
+
+        }else if(!chkguardar.isChecked()){
+            editor.putInt("Guardado", 0);
+            editor.putString("email", "");
+            editor.putString("contrasenha", "");
+            editor.apply();
+        }
         String email=editUsuario.getText().toString();
         String password=editContrasinal.getText().toString();
 

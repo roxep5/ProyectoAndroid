@@ -15,7 +15,7 @@
     android:layout_height="wrap_content"
     android:layout_margin="20dp"
     android:textSize="@dimen/cabeceras"
-    android:text="Iniciar sesion"
+    android:text="@string/iniciar"
     android:textStyle="bold"
     />
     <EditText
@@ -42,7 +42,7 @@
         android:id="@+id/chkguardar"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:text="Recordar credenciales"/>
+        android:text="@string/recordar"/>
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">

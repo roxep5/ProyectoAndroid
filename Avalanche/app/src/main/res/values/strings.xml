@@ -16,11 +16,12 @@
     <string name="repetirContrasinal">Repeat password</string>
     <string name="registrar">Register</string>
     <string name="numerotelefon">Number</string>
-    <string name="title_activity_inicio_cliente">InicioCliente</string>
-    <string name="tab_text_1">Tab 1</string>
-    <string name="tab_text_2">Tab 2</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="BIENVENIDO">WELCOME</string>
+    <string name="mantener">PRESS AND HOLD TO START THE APPLICATION</string>
+    <string name="iniciar">Log in</string>
+    <string name="recordar">Remember credentials</string>
+    <string name="fruteriasdisponibles">Fruit shops available</string>
+    <string name="seguro">Are you sure you want to go out?</string>
 
 
 </resources>

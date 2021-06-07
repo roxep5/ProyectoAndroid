@@ -15,7 +15,12 @@
     <string name="nuevonombre">Nombre</string>
     <string name="repetirContrasinal">Repetir contraseña</string>
     <string name="registrar">Registrar</string>
-
     <string name="numerotelefon">Numero</string>
+    <string name="BIENVENIDO">BIENVENIDO</string>
+    <string name="mantener">MANTENGA PULSADO PARA INICIAR LA APLICACION</string>
+    <string name="iniciar">Iniciar sesión</string>
+    <string name="recordar">Recordar credenciales</string>
+    <string name="fruteriasdisponibles">Fruterias disponibles</string>
+    <string name="seguro">¿Está seguro que quieres salir?</string>
 
 </resources>

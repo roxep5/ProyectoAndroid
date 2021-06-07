@@ -6,10 +6,12 @@ import androidx.appcompat.app.AppCompatDelegate;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -32,6 +34,7 @@ public class NuevoUsuarioActivity extends AppCompatActivity {
     public static final int CODIGO=1;
     private EditText editUsuario, editContrasinal, editnombre, editrepetircontrasinal, editNumero;
     private Button btnnuevo;
+    private CheckBox mostrarContra;
     private FirebaseAuth mAuth;
 
     @Override
@@ -47,7 +50,24 @@ public class NuevoUsuarioActivity extends AppCompatActivity {
         editrepetircontrasinal=findViewById(R.id.editrepetirContrasinal);
         editNumero=findViewById(R.id.edittelefono);
         btnnuevo=findViewById(R.id.btnRegistrar);
+        mostrarContra =findViewById(R.id.chknverc);
 
+        mostrarContra.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mostrarContra.isChecked()){
+
+                    editContrasinal.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                    editrepetircontrasinal.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+
+                }else if(!mostrarContra.isChecked()){
+
+                    editContrasinal.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                    editrepetircontrasinal.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+
+                }
+            }
+        });
 
     }
 
@@ -112,11 +132,7 @@ public class NuevoUsuarioActivity extends AppCompatActivity {
                                             Toast.LENGTH_SHORT).show();
                                     FirebaseFirestore db = FirebaseFirestore.getInstance();
                                     Usuario usuario= new Usuario(false,nombre,numero);
-                                    // Create a new user with a first and last name
-                                    /*Map<String, Object> usuario = new HashMap<>();
-                                    usuario.put("nombre", nombre);
-                                    usuario.put("numero", numero);
-                                    usuario.put("fruteria", false);*/
+
 
                                     db.collection("Users").document(email).set(usuario);
 

@@ -2,9 +2,12 @@ package com.example.avalanche;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
+import android.app.Notification;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -36,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
         llInicio=findViewById(R.id.llInicio);
 
 
+        Notification.Builder builder = new Notification.Builder(this);
 
         btnEmpezar.setOnLongClickListener(irALogin);
     }
@@ -62,8 +66,23 @@ public class MainActivity extends AppCompatActivity {
 
                 return true;
             case R.id.opsalir:
+                AlertDialog.Builder ventana = new AlertDialog.Builder(this);
+                ventana.setTitle("¿Esta seguro que quieres salir?");
+                ventana.setMessage("Esto cerrará la aplicacion y no mantendra nada guardado");
 
-                finish();
+                ventana.setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                });
+                ventana.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+                ventana.show();
                 return true;
 
             default:
