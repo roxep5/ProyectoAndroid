@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -136,9 +137,15 @@ public class FragmentClienteComprar extends Fragment {
                             lvProductos.setVisibility(View.VISIBLE);
                             break;
                         case R.id.llamar:
-
-                            requestPermissions(new String[]{Manifest.permission.CALL_PHONE},LLAMADA_TELEFONO);
                             seleccionaridUser(fruteriaSeleccionada);
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+                                requestPermissions(new String[]{Manifest.permission.CALL_PHONE},LLAMADA_TELEFONO);
+                            } else{
+                                Leer leer=new Leer();
+                                leer.execute("");
+                            }
+
+
 
                             break;
                     }
@@ -388,6 +395,27 @@ public class FragmentClienteComprar extends Fragment {
 
                     AdaptadorProductos adaptadorProductos=new AdaptadorProductos(getActivity(),productoA);
                     lvProductos.setAdapter(adaptadorProductos);
+
+                }
+
+        }
+        class Leer extends AsyncTask<String, Void, String>{
+
+        @Override
+        protected String doInBackground(String... strings) {
+            try{
+                Thread.sleep(500);
+            }catch(InterruptedException e){
+                e.printStackTrace();
+            }
+            return strings[0];
+        }
+
+        @Override
+        protected void onPostExecute(String cif2) {
+
+
+            startActivity(new Intent(Intent.ACTION_CALL).setData(Uri.parse(telefono)));
 
                 }
 
