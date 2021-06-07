@@ -1,10 +1,16 @@
 package com.example.avalanche;
 
+import android.Manifest;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.os.Handler;
@@ -44,13 +50,15 @@ import java.util.concurrent.Callable;
 import javax.xml.transform.Result;
 
 import static android.content.ContentValues.TAG;
+import static androidx.core.content.ContextCompat.checkSelfPermission;
 
 
 public class FragmentClienteComprar extends Fragment {
 
+    private static final int LLAMADA_TELEFONO = 1 ;
     private ListView lvFruterias, lvProductos;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private String cif;
+    private String telefono;
     private String[] fruteria;
     private ArrayList<FrutasVerduras> productoA;
     private int i=0;
@@ -94,36 +102,57 @@ public class FragmentClienteComprar extends Fragment {
     private AdapterView.OnItemClickListener prueba = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            /**/
             String fruteriaSeleccionada = parent.getItemAtPosition(position).toString();
-            final Query docRef = db.collection("Fruteria")
-                    .whereEqualTo("nombre", fruteriaSeleccionada);
+            PopupMenu popup = new PopupMenu(getActivity(), view);//al inflarlo de manera asincronica decidi usar esto ya que no encontre la respuesta para el menu contextual
+            MenuInflater inflater = popup.getMenuInflater();
+            inflater.inflate(R.menu.menu_contextual,popup.getMenu());
+            popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                public boolean onMenuItemClick(MenuItem item) {
+                    switch (item.getItemId()){
+                        case R.id.comprar:
 
-            docRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
-                @Override
-                public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                    if (error != null) {
-                        Log.w(TAG, "Listen failed.", error);
-                        return;
-                    }
-                    for (QueryDocumentSnapshot doc : value) {
-                        Cargar2 cargar1=new Cargar2();
-                        cargar1.execute(doc.getId());
+                            final Query docRef = db.collection("Fruteria")
+                                    .whereEqualTo("nombre", fruteriaSeleccionada);
 
+                            docRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
+                                @Override
+                                public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                                    if (error != null) {
+                                        Log.w(TAG, "Listen failed.", error);
+                                        return;
+                                    }
+                                    for (QueryDocumentSnapshot doc : value) {
+                                        Cargar2 cargar1=new Cargar2();
+                                        cargar1.execute(doc.getId());
+
+                                    }
+                                }
+
+                            });
+
+
+                            lvFruterias.setVisibility(View.GONE);
+                            lvProductos.setVisibility(View.VISIBLE);
+                            break;
+                        case R.id.llamar:
+
+                            requestPermissions(new String[]{Manifest.permission.CALL_PHONE},LLAMADA_TELEFONO);
+                            seleccionaridUser(fruteriaSeleccionada);
+
+                            break;
                     }
+                    return true;
                 }
 
             });
-
-
-            lvFruterias.setVisibility(View.GONE);
-            lvProductos.setVisibility(View.VISIBLE);
+            popup.show();
         }
 
     };
-/*
-    public void verProducto(String cif2) {
-        Query docRef2 = db.collection("Mercancia")
-                .whereEqualTo("fruteria", cif2);
+    public void seleccionaridUser(String nombrefruteria){
+        Query docRef2 = db.collection("Fruteria")
+                .whereEqualTo("nombre", nombrefruteria);
 
         docRef2.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
@@ -133,53 +162,77 @@ public class FragmentClienteComprar extends Fragment {
                     Log.w(TAG, "Listen failed.", error);
                     return;
                 }
-                productoA = new ArrayList<>();
                 for (QueryDocumentSnapshot doc : value) {
-
-                    String producto = doc.getString("producto");
-                    Cargar1 cargar1=new Cargar1();
-                    cargar1.execute(producto);
-
+                    String usuario=doc.get("usuario").toString();
+                    SeleccionarNumero(usuario);
 
                 }
-                AdaptadorProductos adaptadorProductos=new AdaptadorProductos(getActivity(),productoA);
-                lvProductos.setAdapter(adaptadorProductos);
+
 
             }
 
         });
     }
 
+    public void SeleccionarNumero(String nombreusuario){
 
-    /*public void crearListViewProductos(String ProductoID) {
-        String[] X = ProductoID.split("/");
-        Cargar1 cargar1=new Cargar1();
-        cargar1.execute("prueba");
-        /*final DocumentReference docRef = db.collection(X[0]).document(X[1]);
-        docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+        String[] X = nombreusuario.split("/");
+        DocumentReference docRef2 = db.collection(X[0]).document(X[1]);
+
+        docRef2.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+
                 if (error != null) {
                     Log.w(TAG, "Listen failed.", error);
                     return;
                 }
-
-
                 if (value != null && value.exists()) {
-                    FrutasVerduras frutasVerduras = value.toObject(FrutasVerduras.class);
+                    telefono="tel:"+value.get("numero").toString();
 
-                    i++;
-
-
+                    Toast.makeText(getActivity(),telefono, Toast.LENGTH_LONG).show();
                 } else {
-                    Log.d(TAG, "Current data: null");
+                    Log.d(TAG, value + " data: null");
+                }
+
                 }
 
 
+
+
+        });
+    }
+
+
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
+    {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        //vemos si el código de respuesta coincide con el identificador de nuestra solicitud
+        if (requestCode==LLAMADA_TELEFONO){
+
+            if(grantResults[0]== PackageManager.PERMISSION_GRANTED){
+                int permissionCheck = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CALL_PHONE);
+
+                if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(
+                            getActivity(),
+                            new String[]{Manifest.permission.CALL_PHONE},
+                            LLAMADA_TELEFONO);
+                } else {
+
+                    startActivity(new Intent(Intent.ACTION_CALL).setData(Uri.parse(telefono)));
+                }
             }
-        });*/
+            else {
 
+                Toast.makeText(getActivity(),"No se permite realizar la llamada por falta de permisos", Toast.LENGTH_LONG).show();
 
+            }
+        }
+    }
 
 
 
@@ -203,8 +256,6 @@ public class FragmentClienteComprar extends Fragment {
                         for (int i = 0; i < fruteria.length; i++) {
                             fruteria[i] = list.get(i);
                         }
-
-                        Toast.makeText(getActivity(),"1", Toast.LENGTH_LONG).show();
                     } else {
                         Log.d(TAG, "Error getting documents: ", task.getException());
                     }
@@ -213,26 +264,7 @@ public class FragmentClienteComprar extends Fragment {
         });
 
     }
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v,
-                                    ContextMenu.ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
-        getActivity().getMenuInflater().inflate(R.menu.menu_contextual, menu);
-    }
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        switch (item.getItemId()) {
-            case R.id.comprar:
 
-                return true;
-            case R.id.llamar:
-
-                return true;
-            default:
-                return super.onContextItemSelected(item);
-        }
-    }
 
     class Task1 extends AsyncTask<String, Void, String>{
         @Override
@@ -283,7 +315,6 @@ public class FragmentClienteComprar extends Fragment {
                     if (value != null && value.exists()) {
                         FrutasVerduras frutasVerduras = value.toObject(FrutasVerduras.class);
                         productoA.add(frutasVerduras);
-                        Toast.makeText(getActivity(),frutasVerduras.getImagen()+"", Toast.LENGTH_LONG).show();
                         i++;
 
 
@@ -333,8 +364,6 @@ public class FragmentClienteComprar extends Fragment {
                     }
                     Cargar3 cargar3=new Cargar3();
                     cargar3.execute("");
-                    /*AdaptadorProductos adaptadorProductos=new AdaptadorProductos(getActivity(),productoA);
-                    lvProductos.setAdapter(adaptadorProductos);*/
 
                 }
 
@@ -364,7 +393,9 @@ public class FragmentClienteComprar extends Fragment {
 
         }
 
+
     }
+
 
 
 

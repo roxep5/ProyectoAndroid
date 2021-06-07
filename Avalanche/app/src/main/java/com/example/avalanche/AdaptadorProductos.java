@@ -2,10 +2,13 @@ package com.example.avalanche;
 
 import android.content.Context;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,7 +47,9 @@ public class AdaptadorProductos extends ArrayAdapter<FrutasVerduras> {
                 // on the item click on our list view.
                 // we are displaying a toast message.
                 Toast.makeText(getContext(), "Item clicked is : " + frutasVerduras.getNombre(), Toast.LENGTH_SHORT).show();
+
             }
+
         });
         return listView;
     }
