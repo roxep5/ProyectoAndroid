@@ -7,8 +7,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
 import android.app.Notification;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,6 +26,7 @@ import com.google.firebase.storage.FirebaseStorage;
 
 public class MainActivity extends AppCompatActivity {
     public static final int CODIGO=1;
+    private static final int NOTIF_ALERTA_ID = 1;
     private Button btnEmpezar, btnCliente, btnEmpresa;
     private LinearLayout lnInscribirse, llInicio;
     private FirebaseStorage storage = FirebaseStorage.getInstance("gs://my-custom-bucket");
@@ -40,7 +45,14 @@ public class MainActivity extends AppCompatActivity {
 
 
         Notification.Builder builder = new Notification.Builder(this);
-
+        builder.setSmallIcon(android.R.drawable.star_on);
+        builder.setContentTitle("La app esta abierta");
+        builder.setContentText("Esto es un aviso de que la app está abierta");
+        Bitmap largeIcon= BitmapFactory.decodeResource(getResources(),R.drawable.logo_transparent);
+        builder.setLargeIcon(largeIcon);
+        NotificationManager nm = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+        Notification notificacion=builder.build();
+        nm.notify(NOTIF_ALERTA_ID, notificacion);
         btnEmpezar.setOnLongClickListener(irALogin);
     }
 
