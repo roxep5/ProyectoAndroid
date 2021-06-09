@@ -2,6 +2,7 @@ package com.example.avalanche;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
@@ -9,14 +10,16 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.google.android.material.tabs.TabLayout;
+
+import fragment.FragmentClienteComprar;
+import fragment.FragmentClienteHistorico;
 
 public class PantallaInicioCliente extends AppCompatActivity {
 
@@ -76,14 +79,23 @@ public class PantallaInicioCliente extends AppCompatActivity {
 
                 return true;
             case R.id.opsalir:
-                Bundle bundle=new Bundle();
-                bundle.putInt("finalizar",1);
+                AlertDialog.Builder ventana = new AlertDialog.Builder(this);
+                ventana.setTitle("¿Esta seguro que quieres salir?");
+                ventana.setMessage("Esto cerrará la aplicación y no mantendrá nada guardado");
 
-                Intent intent=new Intent();
-                intent.putExtras(bundle);
+                ventana.setPositiveButton("Si", (dialog, which) -> {
 
-                setResult(RESULT_OK, intent);
-                finish();
+                    Bundle bundle=new Bundle();
+                    bundle.putInt("finalizar",1);
+
+                    Intent intent=new Intent();
+                    intent.putExtras(bundle);
+
+                    setResult(RESULT_OK, intent);
+                    finish();
+                });
+                ventana.setNegativeButton("No", (dialog, which) -> dialog.cancel());
+                ventana.show();
                 return true;
 
             default:

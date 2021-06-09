@@ -1,9 +1,11 @@
 package com.example.avalanche;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
@@ -16,18 +18,13 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentId;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.storage.StorageException;
 
-import java.util.HashMap;
-import java.util.Map;
+import pojo.Usuario;
 
 public class NuevoUsuarioActivity extends AppCompatActivity {
 
@@ -71,7 +68,43 @@ public class NuevoUsuarioActivity extends AppCompatActivity {
 
     }
 
+    public void registrar(View v) {
+        String nombre=editnombre.getText().toString();
+        String email = editUsuario.getText().toString();
+        String password = editContrasinal.getText().toString();
+        String repetirpassword = editrepetircontrasinal.getText().toString();
+        String numero=editNumero.getText().toString();
 
+
+        if(password.equals(repetirpassword)) {
+            if (!email.equals("") && !password.equals("")&& !nombre.equals("")&&!numero.equals("")) {
+                mAuth.createUserWithEmailAndPassword(email, password)
+                        .addOnCompleteListener(this, task -> {
+                            if (task.isSuccessful()) {
+
+                                Toast.makeText(NuevoUsuarioActivity.this, "Usuario Creado.",
+                                        Toast.LENGTH_SHORT).show();
+                                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                                Usuario usuario= new Usuario(false,nombre,numero);
+
+
+                                db.collection("Users").document(email).set(usuario);
+
+                                finish();
+
+                            } else {
+                                Toast.makeText(NuevoUsuarioActivity.this, "Authentication failed.",
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        });
+            } else {
+                Toast.makeText(NuevoUsuarioActivity.this, "Uno o varios campos vacíos", Toast.LENGTH_LONG).show();
+            }
+        }else{
+            Toast.makeText(NuevoUsuarioActivity.this, "Las contraseñas no coinciden", Toast.LENGTH_LONG).show();
+        }
+
+    }
 
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -96,61 +129,28 @@ public class NuevoUsuarioActivity extends AppCompatActivity {
 
                 return true;
             case R.id.opsalir:
-                Bundle bundle=new Bundle();
-                bundle.putInt("finalizar",1);
+                AlertDialog.Builder ventana = new AlertDialog.Builder(this);
+                ventana.setTitle("¿Esta seguro que quieres salir?");
+                ventana.setMessage("Esto cerrará la aplicación y no mantendrá nada guardado");
 
-                Intent intent=new Intent();
-                intent.putExtras(bundle);
+                ventana.setPositiveButton("Si", (dialog, which) -> {
 
-                setResult(RESULT_OK, intent);
-                finish();
+                    Bundle bundle=new Bundle();
+                    bundle.putInt("finalizar",1);
+
+                    Intent intent=new Intent();
+                    intent.putExtras(bundle);
+
+                    setResult(RESULT_OK, intent);
+                    finish();
+                });
+                ventana.setNegativeButton("No", (dialog, which) -> dialog.cancel());
+                ventana.show();
                 return true;
 
             default:
                 return super.onOptionsItemSelected(item);//false
         }
     }
-    public void registrar(View v) {
-        String nombre=editnombre.getText().toString();
-        String email = editUsuario.getText().toString();
-        String password = editContrasinal.getText().toString();
-        String repetirpassword = editrepetircontrasinal.getText().toString();
-        String numero=editNumero.getText().toString();
 
-
-        if(password.equals(repetirpassword)) {
-            if (!email.equals("") && !password.equals("")&& !nombre.equals("")&&!numero.equals("")) {
-                mAuth.createUserWithEmailAndPassword(email, password)
-                        .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                if (task.isSuccessful()) {
-                                    // Sign in success, update UI with the signed-in user's information
-                                    FirebaseUser user = mAuth.getCurrentUser();
-
-                                    Toast.makeText(NuevoUsuarioActivity.this, "Usuario Creado.",
-                                            Toast.LENGTH_SHORT).show();
-                                    FirebaseFirestore db = FirebaseFirestore.getInstance();
-                                    Usuario usuario= new Usuario(false,nombre,numero);
-
-
-                                    db.collection("Users").document(email).set(usuario);
-
-                                    finish();
-
-                                } else {
-                                    // If sign in fails, display a message to the user.
-                                    Toast.makeText(NuevoUsuarioActivity.this, "Authentication failed.",
-                                            Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        });
-            } else {
-                Toast.makeText(NuevoUsuarioActivity.this, "Uno o varios campos vacíos", Toast.LENGTH_LONG).show();
-            }
-        }else{
-            Toast.makeText(NuevoUsuarioActivity.this, "Las contraseñas no coinciden", Toast.LENGTH_LONG).show();
-        }
-
-    }
 }

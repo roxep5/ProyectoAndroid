@@ -1,4 +1,4 @@
-package com.example.avalanche;
+package pojo;
 
 public class Fruteria {
     private String direccion;

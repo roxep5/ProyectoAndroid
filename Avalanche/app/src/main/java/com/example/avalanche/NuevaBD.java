@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import androidx.annotation.Nullable;
 
 public class NuevaBD extends SQLiteOpenHelper {
+    //dejo la base de datos que creé al principio, en condiciones normales la hubiera borrado, pero así lo ves
     String sqlCreateFrutas = "CREATE TABLE FRUTAS (codigo INTEGER PRIMARY KEY, nombre TEXT, precio REAL,imagen BLOB)";
     String sqlCreateVerduras = "CREATE TABLE VERDURAS (codigo INTEGER PRIMARY KEY, nombre TEXT, precio REAL)";
     String sqlTienda = "CREATE TABLE TIENDA (codigo INTEGER PRIMARY KEY, nombre TEXT, telefono TEXT, contrasenha TEXT)";

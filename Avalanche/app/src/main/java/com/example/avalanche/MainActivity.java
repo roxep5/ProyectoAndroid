@@ -35,8 +35,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        NuevaBD bd= new NuevaBD(this,"fruteria",null, 1);
-
         btnEmpezar=findViewById(R.id.btnEmpezar);
         btnCliente=findViewById(R.id.btnIniciarCliente);
         btnEmpresa=findViewById(R.id.btnIniciarEmpresa);
@@ -53,7 +51,9 @@ public class MainActivity extends AppCompatActivity {
         NotificationManager nm = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
         Notification notificacion=builder.build();
         nm.notify(NOTIF_ALERTA_ID, notificacion);
+
         btnEmpezar.setOnLongClickListener(irALogin);
+
     }
 
 
@@ -80,20 +80,10 @@ public class MainActivity extends AppCompatActivity {
             case R.id.opsalir:
                 AlertDialog.Builder ventana = new AlertDialog.Builder(this);
                 ventana.setTitle("¿Esta seguro que quieres salir?");
-                ventana.setMessage("Esto cerrará la aplicacion y no mantendra nada guardado");
+                ventana.setMessage("Esto cerrará la aplicación y no mantendrá nada guardado");
 
-                ventana.setPositiveButton("Si", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        finish();
-                    }
-                });
-                ventana.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.cancel();
-                }
-            });
+                ventana.setPositiveButton("Si", (dialog, which) -> finish());
+                ventana.setNegativeButton("No", (dialog, which) -> dialog.cancel());
                 ventana.show();
                 return true;
 

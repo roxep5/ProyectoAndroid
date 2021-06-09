@@ -2,9 +2,11 @@ package com.example.avalanche;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
@@ -30,19 +32,16 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
+
+import pojo.Usuario;
 
 public class LogInActivity extends AppCompatActivity {
     private int bandera;
-    private Button btnEntrar,btnnuevo;
-    private TextView txtCabecera;
+    private Button btnnuevo;
     private CheckBox chkverc, chkguardar;
     private EditText editUsuario, editContrasinal;
     public static final int CODIGO=1;
-    private SQLiteDatabase bd;
-    private ImageView prueba;
     private FirebaseAuth mAuth;
     private SharedPreferences prefs;
 
@@ -52,9 +51,8 @@ public class LogInActivity extends AppCompatActivity {
         setContentView(R.layout.activity_log_in);
         prefs=PreferenceManager.getDefaultSharedPreferences(LogInActivity.this);
 
-        txtCabecera=findViewById(R.id.txtCabeceraLogin);
-        prueba=findViewById(R.id.prueba);
-        btnEntrar=findViewById(R.id.btnEntrar);
+
+
         editUsuario=findViewById(R.id.editUsuario);
         editContrasinal=findViewById(R.id.editContrasinal);
         chkverc=findViewById(R.id.chkverc);
@@ -72,8 +70,6 @@ public class LogInActivity extends AppCompatActivity {
             editContrasinal.setText(contrasenha);
         }
 
-        FirebaseAnalytics firebaseAnalytics=FirebaseAnalytics.getInstance(this);
-
         mAuth = FirebaseAuth.getInstance();
 
         Intent intent=getIntent();
@@ -83,23 +79,17 @@ public class LogInActivity extends AppCompatActivity {
             btnnuevo.setEnabled(true);
         }
 
-        btnnuevo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent=new Intent(LogInActivity.this, NuevoUsuarioActivity.class);
-                startActivityForResult(intent,CODIGO);
-            }
+        btnnuevo.setOnClickListener(v -> {
+            Intent intent1 =new Intent(LogInActivity.this, NuevoUsuarioActivity.class);
+            startActivityForResult(intent1,CODIGO);
         });
 
 
-        chkverc.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(chkverc.isChecked()){
-                    editContrasinal.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-                }else if(!chkverc.isChecked()){
-                    editContrasinal.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-                }
+        chkverc.setOnClickListener(v -> {
+            if(chkverc.isChecked()){
+                editContrasinal.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+            }else if(!chkverc.isChecked()){
+                editContrasinal.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
             }
         });
 
@@ -111,16 +101,19 @@ public class LogInActivity extends AppCompatActivity {
 
         SharedPreferences.Editor editor = prefs.edit();
         if(chkguardar.isChecked()){
+
             editor.putInt("Guardado", 1);
             editor.putString("email", editUsuario.getText().toString());
             editor.putString("contrasenha", editContrasinal.getText().toString());
             editor.apply();
 
         }else if(!chkguardar.isChecked()){
+
             editor.putInt("Guardado", 0);
             editor.putString("email", "");
             editor.putString("contrasenha", "");
             editor.apply();
+
         }
         String email=editUsuario.getText().toString();
         String password=editContrasinal.getText().toString();
@@ -128,39 +121,36 @@ public class LogInActivity extends AppCompatActivity {
             if (!email.equals("") && !password.equals("")) {
 
                 mAuth.signInWithEmailAndPassword(email, password)
-                        .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
+                        .addOnCompleteListener(this, task -> {
 
-                                if (task.isSuccessful()) {
-                                    // Sign in success, update UI with the signed-in user's information
+                            if (task.isSuccessful()) {
+                                // Sign in success, update UI with the signed-in user's information
 
-                                    FirebaseFirestore db = FirebaseFirestore.getInstance();
-                                    DocumentReference docRef = db.collection("Users").document(email);
-                                    docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                        @Override
-                                        public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                            Usuario usuario = documentSnapshot.toObject(Usuario.class);
-                                            if (!usuario.isFruteria()&&bandera==1) {
+                                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                                DocumentReference docRef = db.collection("Users").document(email);
+                                docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                    @Override
+                                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                        Usuario usuario = documentSnapshot.toObject(Usuario.class);
+                                        if (!usuario.isFruteria()&&bandera==1) {
 
-                                                FirebaseUser user = mAuth.getCurrentUser();
-                                                Intent intent = new Intent(LogInActivity.this, PantallaInicioCliente.class);
-                                                startActivityForResult(intent, CODIGO);
+                                            FirebaseUser user = mAuth.getCurrentUser();
+                                            Intent intent = new Intent(LogInActivity.this, PantallaInicioCliente.class);
+                                            startActivityForResult(intent, CODIGO);
 
-                                            }else if(usuario.isFruteria()&&bandera==2){
+                                        }else if(usuario.isFruteria()&&bandera==2){
 
-                                                FirebaseUser user = mAuth.getCurrentUser();
-                                                Intent intent = new Intent(LogInActivity.this, PantallaInicioEmpresa.class);
-                                                startActivityForResult(intent, CODIGO);
+                                            FirebaseUser user = mAuth.getCurrentUser();
+                                            Intent intent = new Intent(LogInActivity.this, PantallaInicioEmpresa.class);
+                                            startActivityForResult(intent, CODIGO);
 
-                                            }
                                         }
-                                    });
+                                    }
+                                });
 
 
-                                } else {
-                                    Toast.makeText(LogInActivity.this, "Email o contraseña erróneos", Toast.LENGTH_LONG).show();
-                                }
+                            } else {
+                                Toast.makeText(LogInActivity.this, "Email o contraseña erróneos", Toast.LENGTH_LONG).show();
                             }
                         });
 
@@ -194,14 +184,23 @@ public class LogInActivity extends AppCompatActivity {
 
                 return true;
             case R.id.opsalir:
-                Bundle bundle=new Bundle();
-                bundle.putInt("finalizar",1);
+                AlertDialog.Builder ventana = new AlertDialog.Builder(this);
+                ventana.setTitle("¿Esta seguro que quieres salir?");
+                ventana.setMessage("Esto cerrará la aplicación y no mantendrá nada guardado");
 
-                Intent intent=new Intent();
-                intent.putExtras(bundle);
+                ventana.setPositiveButton("Si", (dialog, which) -> {
 
-                setResult(RESULT_OK, intent);
-                finish();
+                    Bundle bundle=new Bundle();
+                    bundle.putInt("finalizar",1);
+
+                    Intent intent=new Intent();
+                    intent.putExtras(bundle);
+
+                    setResult(RESULT_OK, intent);
+                    finish();
+                });
+                ventana.setNegativeButton("No", (dialog, which) -> dialog.cancel());
+                ventana.show();
                 return true;
 
             default:
@@ -212,10 +211,15 @@ public class LogInActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         int datoRecibido;
+
         if(requestCode==CODIGO){
+
             if(resultCode==RESULT_OK){
+
                 datoRecibido=data.getExtras().getInt("finalizar");
+
                 if(datoRecibido==1){
+
                     Bundle bundle=new Bundle();
                     bundle.putInt("finalizar",1);
 

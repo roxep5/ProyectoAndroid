@@ -1,4 +1,4 @@
-package com.example.avalanche;
+package fragment;
 
 import android.Manifest;
 import android.content.Intent;
@@ -8,19 +8,13 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
 import android.util.Log;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,7 +25,9 @@ import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
+import adaptador.AdaptadorProductos;
+import pojo.FrutasVerduras;
+import com.example.avalanche.R;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
@@ -43,15 +39,10 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
-
-import javax.xml.transform.Result;
 
 import static android.content.ContentValues.TAG;
-import static androidx.core.content.ContextCompat.checkSelfPermission;
 
 
 public class FragmentClienteComprar extends Fragment {
@@ -116,20 +107,16 @@ public class FragmentClienteComprar extends Fragment {
                             final Query docRef = db.collection("Fruteria")
                                     .whereEqualTo("nombre", fruteriaSeleccionada);
 
-                            docRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
-                                @Override
-                                public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                                    if (error != null) {
-                                        Log.w(TAG, "Listen failed.", error);
-                                        return;
-                                    }
-                                    for (QueryDocumentSnapshot doc : value) {
-                                        Cargar2 cargar1=new Cargar2();
-                                        cargar1.execute(doc.getId());
-
-                                    }
+                            docRef.addSnapshotListener((value, error) -> {
+                                if (error != null) {
+                                    Log.w(TAG, "Listen failed.", error);
+                                    return;
                                 }
+                                for (QueryDocumentSnapshot doc : value) {
+                                    Cargar2 cargar1=new Cargar2();
+                                    cargar1.execute(doc.getId());
 
+                                }
                             });
 
 
@@ -161,22 +148,18 @@ public class FragmentClienteComprar extends Fragment {
         Query docRef2 = db.collection("Fruteria")
                 .whereEqualTo("nombre", nombrefruteria);
 
-        docRef2.addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+        docRef2.addSnapshotListener((value, error) -> {
 
-                if (error != null) {
-                    Log.w(TAG, "Listen failed.", error);
-                    return;
-                }
-                for (QueryDocumentSnapshot doc : value) {
-                    String usuario=doc.get("usuario").toString();
-                    SeleccionarNumero(usuario);
-
-                }
-
+            if (error != null) {
+                Log.w(TAG, "Listen failed.", error);
+                return;
+            }
+            for (QueryDocumentSnapshot doc : value) {
+                String usuario=doc.get("usuario").toString();
+                SeleccionarNumero(usuario);
 
             }
+
 
         });
     }
@@ -186,28 +169,21 @@ public class FragmentClienteComprar extends Fragment {
         String[] X = nombreusuario.split("/");
         DocumentReference docRef2 = db.collection(X[0]).document(X[1]);
 
-        docRef2.addSnapshotListener(new EventListener<DocumentSnapshot>() {
-            @Override
-            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+        docRef2.addSnapshotListener((value, error) -> {
 
-                if (error != null) {
-                    Log.w(TAG, "Listen failed.", error);
-                    return;
-                }
-                if (value != null && value.exists()) {
-                    telefono="tel:"+value.get("numero").toString();
+            if (error != null) {
+                Log.w(TAG, "Listen failed.", error);
+                return;
+            }
+            if (value != null && value.exists()) {
+                telefono="tel:"+value.get("numero").toString();
 
-                    Toast.makeText(getActivity(),telefono, Toast.LENGTH_LONG).show();
-                } else {
-                    Log.d(TAG, value + " data: null");
-                }
+                Toast.makeText(getActivity(),telefono, Toast.LENGTH_LONG).show();
+            } else {
+                Log.d(TAG, value + " data: null");
+            }
 
-                }
-
-
-
-
-        });
+            });
     }
 
 
@@ -246,26 +222,23 @@ public class FragmentClienteComprar extends Fragment {
     private void LeerFruteria() {
         Task<QuerySnapshot> task=FirebaseFirestore.getInstance().collection("Fruteria").get();
         List<String> list = new ArrayList<>();
-        task.addOnSuccessListener(getActivity(), new OnSuccessListener<QuerySnapshot>() {
-            @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                {
-                    if (task.isSuccessful()) {
+        task.addOnSuccessListener(getActivity(), queryDocumentSnapshots -> {
+            {
+                if (task.isSuccessful()) {
 
-                        List<String> list = new ArrayList<>();
+                    List<String> list1 = new ArrayList<>();
 
 
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            list.add(document.getString("nombre"));
-                        }
-                        fruteria = new String[list.size()];
-
-                        for (int i = 0; i < fruteria.length; i++) {
-                            fruteria[i] = list.get(i);
-                        }
-                    } else {
-                        Log.d(TAG, "Error getting documents: ", task.getException());
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        list1.add(document.getString("nombre"));
                     }
+                    fruteria = new String[list1.size()];
+
+                    for (int i = 0; i < fruteria.length; i++) {
+                        fruteria[i] = list1.get(i);
+                    }
+                } else {
+                    Log.d(TAG, "Error getting documents: ", task.getException());
                 }
             }
         });
@@ -288,7 +261,7 @@ public class FragmentClienteComprar extends Fragment {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             ArrayAdapter<String> adaptador;
-            adaptador = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, fruteria);
+            adaptador = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, fruteria);
             lvFruterias.setAdapter(adaptador);
         }
     }
@@ -310,27 +283,24 @@ public class FragmentClienteComprar extends Fragment {
             String[] X = frutasVerduras2.split("/");
             super.onPostExecute(frutasVerduras2);
             final DocumentReference docRef = db.collection(X[0]).document(X[1]);
-            docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
-                @Override
-                public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                    if (error != null) {
-                        Log.w(TAG, "Listen failed.", error);
-                        return;
-                    }
-
-
-                    if (value != null && value.exists()) {
-                        FrutasVerduras frutasVerduras = value.toObject(FrutasVerduras.class);
-                        productoA.add(frutasVerduras);
-                        i++;
-
-
-                    } else {
-                        Log.d(TAG, "Current data: null");
-                    }
-
-
+            docRef.addSnapshotListener((value, error) -> {
+                if (error != null) {
+                    Log.w(TAG, "Listen failed.", error);
+                    return;
                 }
+
+
+                if (value != null && value.exists()) {
+                    FrutasVerduras frutasVerduras = value.toObject(FrutasVerduras.class);
+                    productoA.add(frutasVerduras);
+                    i++;
+
+
+                } else {
+                    Log.d(TAG, "Current data: null");
+                }
+
+
             });
         }
 

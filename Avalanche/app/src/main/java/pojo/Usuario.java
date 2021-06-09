@@ -1,4 +1,4 @@
-package com.example.avalanche;
+package pojo;
 
 public class Usuario {
     private String nombre, numero;
