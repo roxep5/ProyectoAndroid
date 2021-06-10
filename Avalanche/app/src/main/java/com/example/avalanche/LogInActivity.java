@@ -45,6 +45,12 @@ public class LogInActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private SharedPreferences prefs;
 
+    //Usuarios fruterias: (llevan true en la base de datos)
+    //frutas@frutas.com
+    //ll@ll.com
+    //pepe@pepe.com
+    //contraseñas: abc123. (el punto es importante)
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -136,6 +142,7 @@ public class LogInActivity extends AppCompatActivity {
 
                                             FirebaseUser user = mAuth.getCurrentUser();
                                             Intent intent = new Intent(LogInActivity.this, PantallaInicioCliente.class);
+                                            intent.putExtra("email",email);
                                             startActivityForResult(intent, CODIGO);
 
                                         }else if(usuario.isFruteria()&&bandera==2){

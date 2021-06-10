@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="fragment.FragmentClientePerfil"
+    android:background="@color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <!--No queria dejar nada sin utilizar, por ello al menos queria aprovechar esta vista para mostrar el
+        perfil del usuario. Mostrar las ventas era bastante complejo y lo reduje-->
+        <TextView
+            android:id="@+id/txtperfil"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="PERFIL"
+            android:textSize="@dimen/textohistorico"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/cabeceras"/>
+        <TextView
+            android:id="@+id/txtnombre"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/textohistorico"
+            android:layout_marginTop="@dimen/marginlinea"
+            android:layout_marginLeft="@dimen/marginlinea"/>
+        <TextView
+            android:id="@+id/txtnumero"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/textohistorico"
+            android:layout_marginTop="@dimen/marginlinea"
+            android:layout_marginLeft="@dimen/marginlinea"
+            />
+        <TextView
+            android:id="@+id/txtemail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/textohistorico"
+            android:layout_marginTop="@dimen/marginlinea"
+            android:layout_marginLeft="@dimen/marginlinea"
+            />
+    </LinearLayout>
+</FrameLayout>

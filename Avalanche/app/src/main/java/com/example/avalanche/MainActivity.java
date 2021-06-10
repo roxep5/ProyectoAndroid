@@ -29,7 +29,9 @@ public class MainActivity extends AppCompatActivity {
     private static final int NOTIF_ALERTA_ID = 1;
     private Button btnEmpezar, btnCliente, btnEmpresa;
     private LinearLayout lnInscribirse, llInicio;
-    private FirebaseStorage storage = FirebaseStorage.getInstance("gs://my-custom-bucket");
+
+    //en la mayoria de clases usé lambda porque me parece mas bonito y limpio esteticamente
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

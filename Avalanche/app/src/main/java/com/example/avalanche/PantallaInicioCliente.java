@@ -10,7 +10,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -19,7 +18,7 @@ import android.view.MenuItem;
 import com.google.android.material.tabs.TabLayout;
 
 import fragment.FragmentClienteComprar;
-import fragment.FragmentClienteHistorico;
+import fragment.FragmentClientePerfil;
 
 public class PantallaInicioCliente extends AppCompatActivity {
 
@@ -125,10 +124,7 @@ public class PantallaInicioCliente extends AppCompatActivity {
         public PlaceholderFragment() {
         }
 
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         */
+ 
         public static PlaceholderFragment newInstance(int sectionNumber) {
             PlaceholderFragment fragment = new PlaceholderFragment();
             Bundle args = new Bundle();
@@ -153,7 +149,7 @@ public class PantallaInicioCliente extends AppCompatActivity {
                     fragment = new FragmentClienteComprar();
                     break;
                 case 1:
-                    fragment = new FragmentClienteHistorico();
+                    fragment = new FragmentClientePerfil();
                     break;
             }
             return fragment;

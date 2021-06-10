@@ -33,7 +33,7 @@ public class NuevoUsuarioActivity extends AppCompatActivity {
     private Button btnnuevo;
     private CheckBox mostrarContra;
     private FirebaseAuth mAuth;
-
+//No tiene mucho, solo un usuario normal puede entrar, las fruterias las crea el diseñador
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

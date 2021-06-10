@@ -58,7 +58,7 @@ public class FragmentClienteComprar extends Fragment {
         // Required empty public constructor
     }
 
-
+//Los hilos tienen que ir interrelacionados para no sobreponerse, de esta manera se logra que las fruterias muestren las frutas que hemos dado de alta en la coleccion de mercancia
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,46 +99,43 @@ public class FragmentClienteComprar extends Fragment {
             PopupMenu popup = new PopupMenu(getActivity(), view);//al inflarlo de manera asincronica decidi usar esto ya que no encontre la respuesta para el menu contextual
             MenuInflater inflater = popup.getMenuInflater();
             inflater.inflate(R.menu.menu_contextual,popup.getMenu());
-            popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                public boolean onMenuItemClick(MenuItem item) {
-                    switch (item.getItemId()){
-                        case R.id.comprar:
+            popup.setOnMenuItemClickListener(item -> {
+                switch (item.getItemId()){
+                    case R.id.comprar:
 
-                            final Query docRef = db.collection("Fruteria")
-                                    .whereEqualTo("nombre", fruteriaSeleccionada);
+                        final Query docRef = db.collection("Fruteria")
+                                .whereEqualTo("nombre", fruteriaSeleccionada);
 
-                            docRef.addSnapshotListener((value, error) -> {
-                                if (error != null) {
-                                    Log.w(TAG, "Listen failed.", error);
-                                    return;
-                                }
-                                for (QueryDocumentSnapshot doc : value) {
-                                    Cargar2 cargar1=new Cargar2();
-                                    cargar1.execute(doc.getId());
-
-                                }
-                            });
-
-
-                            lvFruterias.setVisibility(View.GONE);
-                            lvProductos.setVisibility(View.VISIBLE);
-                            break;
-                        case R.id.llamar:
-                            seleccionaridUser(fruteriaSeleccionada);
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-                                requestPermissions(new String[]{Manifest.permission.CALL_PHONE},LLAMADA_TELEFONO);
-                            } else{
-                                Leer leer=new Leer();
-                                leer.execute("");
+                        docRef.addSnapshotListener((value, error) -> {
+                            if (error != null) {
+                                Log.w(TAG, "Listen failed.", error);
+                                return;
                             }
+                            for (QueryDocumentSnapshot doc : value) {
+                                Cargar2 cargar1=new Cargar2();
+                                cargar1.execute(doc.getId());
+
+                            }
+                        });
+
+
+                        lvFruterias.setVisibility(View.GONE);
+                        lvProductos.setVisibility(View.VISIBLE);
+                        break;
+                    case R.id.llamar:
+                        seleccionaridUser(fruteriaSeleccionada);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+                            requestPermissions(new String[]{Manifest.permission.CALL_PHONE},LLAMADA_TELEFONO);
+                        } else{
+                            Leer leer=new Leer();
+                            leer.execute("");
+                        }
 
 
 
-                            break;
-                    }
-                    return true;
+                        break;
                 }
-
+                return true;
             });
             popup.show();
         }
