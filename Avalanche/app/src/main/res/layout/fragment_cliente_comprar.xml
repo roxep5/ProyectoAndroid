@@ -14,19 +14,22 @@
         android:layout_height="wrap_content"
         android:text="@string/fruteriasdisponibles"
         android:textSize="@dimen/textohistorico"/>
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/textohistorico"
-        android:text="Sigiente"/><!--
-        En este boton continuaríamos hacia la transaccion y se finalizaria el pago, esto llevaria mucho tiempo,
-        por ello esta el onclick en el adaptador, aunque seria un poco diferente ya que al final se seleccionaria en base
-        al spinner. pero habria varias maneras de hacerlo.
-        -->
+
     <ListView
         android:id="@+id/lvFruterias"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
+    <Button
+        android:id="@+id/btnsiguiente"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/textohistorico"
+        android:text="Siguiente"
+        android:visibility="gone"/><!--
+        En este boton continuaríamos hacia la transaccion y se finalizaria el pago, esto llevaria mucho tiempo,
+        por ello esta el onclick en el adaptador, aunque seria un poco diferente ya que al final se seleccionaria en base
+        al spinner. pero habria varias maneras de hacerlo.
+        -->
     <ListView
         android:id="@+id/lvProductos"
         android:layout_width="match_parent"

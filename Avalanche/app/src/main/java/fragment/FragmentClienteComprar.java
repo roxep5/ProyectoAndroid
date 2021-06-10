@@ -21,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.Toast;
@@ -49,6 +50,7 @@ public class FragmentClienteComprar extends Fragment {
 
     private static final int LLAMADA_TELEFONO = 1 ;
     private ListView lvFruterias, lvProductos;
+    private Button btnSiguiente;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private String telefono;
     private String[] fruteria;
@@ -70,13 +72,12 @@ public class FragmentClienteComprar extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-        setHasOptionsMenu(true);
         View vista;
         vista= inflater.inflate(R.layout.fragment_cliente_comprar, container, false);
 
         lvFruterias=vista.findViewById(R.id.lvFruterias);
-        registerForContextMenu(lvFruterias);
         lvProductos=vista.findViewById(R.id.lvProductos);
+        btnSiguiente=vista.findViewById(R.id.btnsiguiente);
 
         LeerFruteria();
 
@@ -120,6 +121,8 @@ public class FragmentClienteComprar extends Fragment {
 
 
                         lvFruterias.setVisibility(View.GONE);
+
+                        btnSiguiente.setVisibility(View.VISIBLE);
                         lvProductos.setVisibility(View.VISIBLE);
                         break;
                     case R.id.llamar:

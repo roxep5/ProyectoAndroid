@@ -149,6 +149,7 @@ public class LogInActivity extends AppCompatActivity {
 
                                             FirebaseUser user = mAuth.getCurrentUser();
                                             Intent intent = new Intent(LogInActivity.this, PantallaInicioEmpresa.class);
+                                            intent.putExtra("email",email);
                                             startActivityForResult(intent, CODIGO);
 
                                         }

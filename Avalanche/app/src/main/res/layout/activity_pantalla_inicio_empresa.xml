@@ -5,15 +5,43 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".PantallaInicioEmpresa"
-    android:gravity="center"
     android:orientation="vertical">
-<TextView
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="SELECCIONA UNA OPCION"
-    android:textSize="30sp"
-    android:gravity="center"/>
-    <Spinner
+    <TextView
+        android:textSize="30dp"
+        android:textStyle="bold"
+        android:text="@string/BIENVENIDO"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/marginlinea"
+        android:layout_marginLeft="@dimen/marginlinea"/>
+    <TextView
+        android:id="@+id/txtCif"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/textohistorico"
+        android:layout_marginTop="@dimen/marginlinea"
+        android:layout_marginLeft="@dimen/marginlinea"/>
+    <TextView
+        android:id="@+id/txtnombreempresa"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/textohistorico"
+        android:layout_marginTop="@dimen/marginlinea"
+        android:layout_marginLeft="@dimen/marginlinea"/>
+    <TextView
+        android:id="@+id/txtnumeroempresa"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/textohistorico"
+        android:layout_marginTop="@dimen/marginlinea"
+        android:layout_marginLeft="@dimen/marginlinea"
+        />
+    <TextView
+        android:id="@+id/txtemailempresa"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/textohistorico"
+        android:layout_marginTop="@dimen/marginlinea"
+        android:layout_marginLeft="@dimen/marginlinea"
+        />
 </LinearLayout>
