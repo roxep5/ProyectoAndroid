@@ -10,11 +10,15 @@
         android:roundIcon="@mipmap/logo_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Avalanche">
-        <activity android:name=".NuevoUsuarioActivity" />
-        <activity android:name=".PantallaInicioEmpresa" />
-        <activity android:name=".PantallaInicioCliente" />
-        <activity android:name=".LogInActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".NuevoUsuarioActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".PantallaInicioEmpresa"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".PantallaInicioCliente"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".LogInActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -5,14 +5,18 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -44,18 +48,35 @@ public class MainActivity extends AppCompatActivity {
         llInicio=findViewById(R.id.llInicio);
 
 
-        Notification.Builder builder = new Notification.Builder(this);
-        builder.setSmallIcon(android.R.drawable.star_on);
-        builder.setContentTitle("La app esta abierta");
-        builder.setContentText("Esto es un aviso de que la app está abierta");
-        Bitmap largeIcon= BitmapFactory.decodeResource(getResources(),R.drawable.logo_transparent);
-        builder.setLargeIcon(largeIcon);
-        NotificationManager nm = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
-        Notification notificacion=builder.build();
-        nm.notify(NOTIF_ALERTA_ID, notificacion);
+
 
         btnEmpezar.setOnLongClickListener(irALogin);
+        NotificationCompat.Builder builder2 = new NotificationCompat.Builder(this, "CHANNEL_ID")
+                .setSmallIcon(R.drawable.logo_transparent)
+                .setContentTitle("La app esta abierta")
+                .setContentText("Esto es un aviso de que la app está abierta")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+        //NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
 
+        // notificationId is a unique int for each notification that you must define
+        notificationManager.notify(1, builder2.build());
+createNotificationChannel();
+    }
+    private void createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = getString(R.string.project_id);
+            String description = getString(R.string.iniciar);
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel("CHANNEL_ID", name, importance);
+            channel.setDescription(description);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
     }
 
 
